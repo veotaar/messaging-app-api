@@ -1,4 +1,4 @@
-import { getModelForClass, prop } from '@typegoose/typegoose';
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 
@@ -12,8 +12,8 @@ export class User extends TimeStamps {
   @prop({ type: () => String })
   public password!: string;
 
-  // @prop({ ref: () => User, type: () => Array })
-  // public friends?: Ref<User>[];
+  @prop({ ref: () => User, type: () => Array })
+  public friends?: Ref<User>[];
 }
 
 const UserModel = getModelForClass(User);
