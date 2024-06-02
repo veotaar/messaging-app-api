@@ -4,10 +4,10 @@ import { User } from './user.model';
 import { Message } from './message.model';
 
 export class Conversation extends TimeStamps {
-  @prop({ ref: () => User, type: () => Array })
+  @prop({ ref: () => User })
   public participants!: Ref<User>[];
 
-  @prop({ ref: () => Message, type: () => Array })
+  @prop({ ref: () => Message })
   public messages?: Ref<Message>[];
 
 }

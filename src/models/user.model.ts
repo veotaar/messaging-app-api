@@ -12,7 +12,7 @@ export class User extends TimeStamps {
   @prop({ type: () => String })
   public password!: string;
 
-  @prop({ ref: () => User, type: () => Array })
+  @prop({ ref: () => User, default: [] })
   public friends?: Ref<User>[];
 }
 
