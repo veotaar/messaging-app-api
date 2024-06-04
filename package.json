@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@typegoose/typegoose": "^12.5.0",
+    "argon2": "^0.40.3",
     "bcrypt": "^5.1.1",
     "config": "^3.3.11",
     "cors": "^2.8.5",
