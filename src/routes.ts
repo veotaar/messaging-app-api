@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express';
 import validate from './middleware/validateSchema';
-import { createUserSchema } from './schema/user.schema';
-import { createUserHandler } from './controllers/user.controller';
+import { createUserSchema, loginSchema } from './schema/user.schema';
+import { createUserHandler, loginHandler } from './controllers/user.controller';
 
 
 const routes = (app: Express) => {
@@ -9,6 +9,7 @@ const routes = (app: Express) => {
 
   app.post('/api/users', validate(createUserSchema), createUserHandler);
 
+  app.post('/login', validate(loginSchema), loginHandler)
 }
 
 export default routes;
