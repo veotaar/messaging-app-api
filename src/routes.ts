@@ -4,7 +4,7 @@ import requireAuth from './middleware/requireAuth';
 import { createUserSchema, loginSchema } from './schema/user.schema';
 import { friendRequestSchema } from './schema/friendRequest.schema';
 import { createUserHandler, loginHandler } from './controllers/user.controller';
-import { createFriendRequestHandler } from './controllers/friendRequest.controller';
+import { createFriendRequestHandler, listFriendRequestsHandler } from './controllers/friendRequest.controller';
 
 
 const routes = (app: Express) => {
@@ -16,6 +16,7 @@ const routes = (app: Express) => {
   app.post('/login', validate(loginSchema), loginHandler)
 
   app.post('/api/friend-requests', validate(friendRequestSchema), requireAuth, createFriendRequestHandler);
+  app.get('/api/friend-requests', requireAuth, listFriendRequestsHandler)
 }
 
 export default routes;

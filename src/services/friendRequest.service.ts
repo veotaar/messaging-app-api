@@ -20,3 +20,17 @@ export const createFriendRequest = async (input: FriendRequestInput) => {
     throw new Error(e);
   }
 }
+
+export const listFriendRequests = async (userId: string) => {
+  try {
+    const sentRequests = await FriendRequestModel.find({ from: userId }).select('-from').populate('to', 'username');
+    const receivedRequests = await FriendRequestModel.find({ to: userId }).select('-to').populate('from', 'username');
+
+    return {
+      sent: sentRequests,
+      received: receivedRequests
+    }
+  } catch(e: any) {
+    throw new Error(e);
+  }
+}

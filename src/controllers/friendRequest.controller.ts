@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { friendRequestInput } from "../schema/friendRequest.schema";
-import { createFriendRequest } from "../services/friendRequest.service";
+import { createFriendRequest, listFriendRequests } from "../services/friendRequest.service";
 import log from "../utils/logger";
 
 export const createFriendRequestHandler = async (req: Request<{}, {}, friendRequestInput['body']>, res: Response) => {
@@ -21,5 +21,19 @@ export const createFriendRequestHandler = async (req: Request<{}, {}, friendRequ
   } catch (e) {
     log.error(e);
     return res.status(400).json({ msg: "cannot send friend request" });
+  }
+}
+
+export const listFriendRequestsHandler = async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.user.sub as string;
+
+    const friendRequests = await listFriendRequests(userId);
+
+    return res.json(friendRequests);
+
+  } catch (e) {
+    log.error(e);
+    return res.status(400).json({ msg: "cannot list friend requests" });
   }
 }
