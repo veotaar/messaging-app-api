@@ -2,7 +2,9 @@ import { Express, Request, Response } from 'express';
 import validate from './middleware/validateSchema';
 import requireAuth from './middleware/requireAuth';
 import { createUserSchema, loginSchema } from './schema/user.schema';
+import { friendRequestSchema } from './schema/friendRequest.schema';
 import { createUserHandler, loginHandler } from './controllers/user.controller';
+import { createFriendRequestHandler } from './controllers/friendRequest.controller';
 
 
 const routes = (app: Express) => {
@@ -12,6 +14,8 @@ const routes = (app: Express) => {
   app.post('/api/users', validate(createUserSchema), createUserHandler);
 
   app.post('/login', validate(loginSchema), loginHandler)
+
+  app.post('/api/friend-requests', validate(friendRequestSchema), requireAuth, createFriendRequestHandler);
 }
 
 export default routes;
