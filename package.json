@@ -13,7 +13,6 @@
   "dependencies": {
     "@typegoose/typegoose": "^12.5.0",
     "argon2": "^0.40.3",
-    "bcrypt": "^5.1.1",
     "config": "^3.3.11",
     "cors": "^2.8.5",
     "dayjs": "^1.11.11",
@@ -26,7 +25,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/body-parser": "^1.19.5",
     "@types/config": "^3.3.4",
     "@types/cors": "^2.8.17",
@@ -39,6 +37,7 @@
     "mongodb-memory-server": "^9.4.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2",
     "tsx": "^4.11.0",
     "typescript": "^5.4.5"
   }

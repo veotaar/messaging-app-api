@@ -7,7 +7,7 @@ module.exports = {
   //   'node_modules/nanoid/.+\\.(j|t)sx?$': 'ts-jest',
   // },
   // transformIgnorePatterns: ['node_modules/(?!nanoid/.*)'],
-  // setupFiles: ['./src/setupTests.js'],
+  setupFiles: ['<rootDir>/jest.setup.js'],
   verbose: true,
   forceExit: true,
   // clearMocks: true,
