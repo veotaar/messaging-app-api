@@ -11,7 +11,7 @@ export const createFriendRequest = async (input: FriendRequestInput) => {
     const friendToAdd = await UserModel.findById(input.to);
     if(!friendToAdd) return false;
 
-    const exists = await FriendRequestModel.find(input);
+    const exists = await FriendRequestModel.find({ $or: [{from: input.from, to: input.to}, {to: input.from, from: input.to}] });
     if(exists.length !== 0) return false;
 
     const friendRequest = new FriendRequestModel(input);
