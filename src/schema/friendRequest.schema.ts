@@ -6,6 +6,16 @@ export const friendRequestSchema = object({
       required_error: 'to field is required',
     }),
   })
+});
+
+export const deletFriendRequestSchema = object({
+  body: object({
+    requestId: string({
+      required_error: 'request ID is required',
+    }),
+  })
 })
 
 export type friendRequestInput = TypeOf<typeof friendRequestSchema>;
+export type deleteFriendRequestInput = TypeOf<typeof deletFriendRequestSchema>;
+
