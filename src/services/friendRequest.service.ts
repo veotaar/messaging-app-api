@@ -35,8 +35,7 @@ export const listFriendRequests = async (userId: string) => {
   }
 }
 
-export const
-deleteFriendRequest = async (from: string, requestId: string) => {
+export const deleteFriendRequest = async (from: string, requestId: string) => {
   try {
     const friendRequest = await FriendRequestModel.findById(requestId);
 

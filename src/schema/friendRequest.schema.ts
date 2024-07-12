@@ -8,14 +8,14 @@ export const friendRequestSchema = object({
   })
 });
 
-export const deletFriendRequestSchema = object({
-  body: object({
+export const deleteFriendRequestSchema = object({
+  params: object({
     requestId: string({
       required_error: 'request ID is required',
     }),
   })
 })
 
-export type friendRequestInput = TypeOf<typeof friendRequestSchema>;
-export type deleteFriendRequestInput = TypeOf<typeof deletFriendRequestSchema>;
+export type FriendRequestInput = TypeOf<typeof friendRequestSchema>;
+export type DeleteFriendRequestInput = TypeOf<typeof deleteFriendRequestSchema>;
 
