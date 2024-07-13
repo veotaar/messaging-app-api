@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { FriendRequestInput, DeleteFriendRequestInput } from "../schema/friendRequest.schema";
-import { createFriendRequest, listFriendRequests, deleteFriendRequest } from "../services/friendRequest.service";
+import { createFriendRequest, listFriendRequests, deleteFriendRequest, findFriendRequest } from "../services/friendRequest.service";
+import { addFriend } from "../services/user.service";
 import log from "../utils/logger";
 
 export const createFriendRequestHandler = async (req: Request<{}, {}, FriendRequestInput['body']>, res: Response) => {
@@ -51,5 +52,30 @@ export const deleteFriendRequestHandler = async (req: Request<DeleteFriendReques
   } catch (e) {
     log.error(e);
     return res.status(400).json({ msg: "cannot delete friend request" });
+  }
+}
+
+export const acceptFriendRequestHandler = async (req: Request<DeleteFriendRequestInput['params']>, res: Response) => {
+  try {
+    const to = res.locals.user.sub as string;
+    const requestId = req.params.requestId;
+
+    const friendRequest = await findFriendRequest(requestId);
+
+    if(!friendRequest) return res.status(404).json({ msg: "cannot find friend request" });
+    if(friendRequest.to.toString() !== to) return res.status(403).json({ msg: "forbidden" });
+
+    const from = friendRequest.from.toString();
+
+    await Promise.all([
+      addFriend(from, to),
+      addFriend(to, from),
+      deleteFriendRequest(from, requestId)
+    ]);
+
+    return res.json({ msg: "friend request accepted" });
+  } catch (e) {
+    log.error(e);
+    return res.status(400).json({ msg: "cannot accept friend request" });
   }
 }

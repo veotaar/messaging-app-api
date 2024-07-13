@@ -35,6 +35,17 @@ export const listFriendRequests = async (userId: string) => {
   }
 }
 
+export const findFriendRequest = async (requestId: string) => {
+  try {
+    const friendRequest = await FriendRequestModel.findById(requestId);
+    if(!friendRequest) return false;
+
+    return friendRequest;
+  } catch(e: any) {
+    throw new Error(e);
+  }
+}
+
 export const deleteFriendRequest = async (from: string, requestId: string) => {
   try {
     const friendRequest = await FriendRequestModel.findById(requestId);
