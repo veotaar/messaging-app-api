@@ -4,7 +4,7 @@ import requireAuth from './middleware/requireAuth';
 import { createUserSchema, loginSchema } from './schema/user.schema';
 import { friendRequestSchema, deleteFriendRequestSchema } from './schema/friendRequest.schema';
 import { createUserHandler, loginHandler } from './controllers/user.controller';
-import { createFriendRequestHandler, deleteFriendRequestHandler, listFriendRequestsHandler, acceptFriendRequestHandler } from './controllers/friendRequest.controller';
+import { createFriendRequestHandler, deleteFriendRequestHandler, listFriendRequestsHandler, acceptFriendRequestHandler, rejectFriendRequestHandler } from './controllers/friendRequest.controller';
 
 
 const routes = (app: Express) => {
@@ -20,6 +20,7 @@ const routes = (app: Express) => {
   app.delete('/api/friend-requests/:requestId', validate(deleteFriendRequestSchema), requireAuth, deleteFriendRequestHandler);
 
   app.put('/api/friend-requests/:requestId/accept', validate(deleteFriendRequestSchema), requireAuth, acceptFriendRequestHandler);
+  app.delete('/api/friend-requests/:requestId/reject', validate(deleteFriendRequestSchema), requireAuth, rejectFriendRequestHandler)
 }
 
 export default routes;

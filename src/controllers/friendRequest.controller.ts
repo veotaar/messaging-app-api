@@ -79,3 +79,24 @@ export const acceptFriendRequestHandler = async (req: Request<DeleteFriendReques
     return res.status(400).json({ msg: "cannot accept friend request" });
   }
 }
+
+export const rejectFriendRequestHandler = async (req: Request<DeleteFriendRequestInput['params']>, res: Response) => {
+  try {
+    const to = res.locals.user.sub as string;
+    const requestId = req.params.requestId;
+
+    const friendRequest = await findFriendRequest(requestId);
+
+    if(!friendRequest) return res.status(404).json({ msg: "cannot find friend request" });
+    if(friendRequest.to.toString() !== to) return res.status(403).json({ msg: "forbidden" });
+
+    const from = friendRequest.from.toString();
+
+    await deleteFriendRequest(from, requestId);
+
+    return res.json({ msg: "friend request rejected" });
+  } catch (e) {
+    log.error(e);
+    return res.status(400).json({ msg: "cannot reject friend request" });
+  }
+}
