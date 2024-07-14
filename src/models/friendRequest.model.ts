@@ -1,16 +1,16 @@
-import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { User } from './user.model';
+import { model, Schema, Types } from 'mongoose';
 
-
-export class FriendRequest extends TimeStamps {
-  @prop({ ref: () => User })
-  public from!: Ref<User>;
-
-  @prop({ ref: () => User })
-  public to!: Ref<User>;
+interface FriendRequest {
+  from: Types.ObjectId;
+  to: Types.ObjectId;
 }
 
-const FriendRequestModel = getModelForClass(FriendRequest);
+const FriendRequestSchema = new Schema({
+  from: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  to: { type: Schema.Types.ObjectId, required: true, ref: 'User' }
+
+})
+
+const FriendRequestModel = model<FriendRequest>('FriendRequest', FriendRequestSchema);
 
 export default FriendRequestModel;

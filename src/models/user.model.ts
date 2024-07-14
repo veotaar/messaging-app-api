@@ -1,21 +1,19 @@
-import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { model, Schema, Types } from 'mongoose';
 
-
-export class User extends TimeStamps {
-  @prop({ unique: true, type: () => String })
-  public email!: string;
-
-  @prop({ type: () => String })
-  public username!: string;
-
-  @prop({ type: () => String })
-  public password!: string;
-
-  @prop({ ref: () => User })
-  public friends?: Ref<User>[];
+export interface User {
+  email: string;
+  username: string;
+  password: string;
+  friends: Types.ObjectId[];
 }
 
-const UserModel = getModelForClass(User);
+const UserSchema = new Schema({
+  email: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  friends: { type: [{ type: Schema.Types.ObjectId, ref: 'User' }], default: [] }
+}, { timestamps: true });
+
+const UserModel = model<User>('User', UserSchema);
 
 export default UserModel;

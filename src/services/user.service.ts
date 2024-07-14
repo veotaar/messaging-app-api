@@ -1,6 +1,6 @@
 import UserModel from "../models/user.model";
 import { hashPassword, verifyPassword } from "../utils/password.utils";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 interface CreateUserInput {
   email: string;
@@ -62,11 +62,7 @@ export const addFriend = async (userId: string, friendId: string) => {
 
     if(!user) return false;
 
-    if(user.friends) {
-      user.friends.push(new mongoose.Types.ObjectId(friendId))
-    } else {
-      user.friends = [new mongoose.Types.ObjectId(friendId)];
-    }
+    user.friends.push(new mongoose.Types.ObjectId(friendId));
 
     return await user.save();
   } catch(e: any) {

@@ -1,19 +1,17 @@
-import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { User } from './user.model';
-import { Conversation } from './conversation.model';
+import { model, Schema, Types } from 'mongoose';
 
-export class Message extends TimeStamps {
-  @prop({ ref: () => User })
-  public author!: Ref<User>;
-
-  @prop({ type: () => String })
-  public content!: string;
-
-  @prop({ ref: () => Conversation })
-  public conversation!: Ref<Conversation>;
+interface Message {
+  author: Types.ObjectId;
+  content: string;
+  conversation: Types.ObjectId;
 }
 
-const MessageModel = getModelForClass(Message);
+const MessageSchema = new Schema({
+  author: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  content: { type: String, required: true },
+  conversation: { type: Schema.Types.ObjectId, required: true, ref: 'Conversation' }
+}, { timestamps: true });
+
+const MessageModel = model<Message>('Message', MessageSchema);
 
 export default MessageModel;

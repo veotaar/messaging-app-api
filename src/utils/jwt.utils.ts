@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import { User } from '../models/user.model';
-import { DocumentType } from '@typegoose/typegoose';
+import { HydratedDocument } from 'mongoose';
 
 const privateKey = Buffer.from(
   config.get<string>('privateKey'),
@@ -13,7 +13,7 @@ const publicKey = Buffer.from(
   'base64'
 ).toString('ascii');
 
-export const issueJwt = (user: DocumentType<User>) => {
+export const issueJwt = (user: HydratedDocument<User>) => {
   const id = user._id.toString();
   const expiresIn = '8h';
 
