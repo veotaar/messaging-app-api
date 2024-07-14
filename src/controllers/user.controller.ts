@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import log from "../utils/logger";
-import { createUser, validateUserPassword } from "../services/user.service";
-import { CreateUserInput, LoginInput } from "../schema/user.schema";
+import { createUser, validateUserPassword, listFriends } from "../services/user.service";
+import { CreateUserInput, LoginInput, FriendsInput } from "../schema/user.schema";
 import { issueJwt } from "../utils/jwt.utils";
 
 export const createUserHandler = async (req: Request<{}, {}, CreateUserInput['body']>, res: Response) => {
@@ -31,6 +31,24 @@ export const loginHandler = async (req: Request<{}, {}, LoginInput['body']>, res
       jwt
     });
   } catch (e) {
+    log.error(e);
+    return res.sendStatus(400);
+  }
+}
+
+export const listFriendsHandler = async (req: Request<FriendsInput['params']>, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const userIdFromToken = res.locals.user.sub as string;
+
+    if(userId !== userIdFromToken) return res.status(403).json({ msg: "forbidden" });
+
+    const friends = await listFriends(userId);
+
+    return res.json({
+      friends
+    });
+  } catch(e) {
     log.error(e);
     return res.sendStatus(400);
   }

@@ -69,3 +69,15 @@ export const addFriend = async (userId: string, friendId: string) => {
     throw new Error(e);
   }
 }
+
+export const listFriends =  async (userId: string) => {
+  try {
+    const user = await UserModel.findById(userId).select('-password').populate('friends', 'username');
+
+    if(!user) return false;
+
+    return user.friends;
+  } catch(e: any) {
+    throw new Error(e);
+  }
+}

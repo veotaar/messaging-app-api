@@ -29,7 +29,16 @@ export const loginSchema = object({
       required_error: 'Password is required',
     }).min(6, 'Password must be at least 6 characters'),
   })
+});
+
+export const friendsSchema = object({
+  params: object({
+    userId: string({
+      required_error: 'user ID is required',
+    }),
+  })
 })
 
 export type CreateUserInput = TypeOf<typeof createUserSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
+export type FriendsInput = TypeOf<typeof friendsSchema>;
