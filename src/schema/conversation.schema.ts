@@ -11,4 +11,13 @@ export const createConversationSchema = object({
   })
 });
 
+export const conversationsSchema = object({
+  params: object({
+    userId: string({
+      required_error: 'user ID is required',
+    }),
+  })
+});
+
 export type CreateConversationInput = TypeOf<typeof createConversationSchema>;
+export type ConversationsInput = TypeOf<typeof conversationsSchema>;

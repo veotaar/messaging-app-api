@@ -3,10 +3,11 @@ import validate from './middleware/validateSchema';
 import requireAuth from './middleware/requireAuth';
 import { createUserSchema, loginSchema, friendsSchema } from './schema/user.schema';
 import { friendRequestSchema, deleteFriendRequestSchema } from './schema/friendRequest.schema';
+import { conversationsSchema } from './schema/conversation.schema';
 import { createConversationSchema } from './schema/conversation.schema';
 import { createUserHandler, loginHandler, listFriendsHandler } from './controllers/user.controller';
 import { createFriendRequestHandler, deleteFriendRequestHandler, listFriendRequestsHandler, acceptFriendRequestHandler, rejectFriendRequestHandler } from './controllers/friendRequest.controller';
-import { createConversationHandler } from './controllers/conversation.controller';
+import { createConversationHandler, listConversationsHandler } from './controllers/conversation.controller';
 
 const routes = (app: Express) => {
   app.get('/protected', requireAuth, (_req, res) => res.json({ msg: 'You are successfully authenticated!' }));
@@ -26,6 +27,7 @@ const routes = (app: Express) => {
   app.get('/api/users/:userId/friends', validate(friendsSchema), requireAuth, listFriendsHandler);
 
   app.post('/api/conversations/:initiatorId/:recipientId', validate(createConversationSchema), requireAuth, createConversationHandler);
+  app.get('/api/users/:userId/conversations', validate(conversationsSchema), requireAuth, listConversationsHandler)
 }
 
 export default routes;

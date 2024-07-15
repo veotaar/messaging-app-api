@@ -44,3 +44,18 @@ export const createConversation = async (initiatorId: string, recipiantId: strin
     throw new Error(e);
   }
 }
+
+export const listConversations = async (userId: string) => {
+  try {
+    const conversations = await ConversationModel.find({
+      $or: [
+        { initiator: userId },
+        { participants: userId, messages: { $exists: true, $not: { $size: 0 } } }
+      ]
+    });
+
+    return conversations;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+}
