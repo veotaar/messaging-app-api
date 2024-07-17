@@ -78,3 +78,16 @@ export const sendMessage = async (userId: string, content: string, conversationI
     throw new Error(e);
   }
 }
+
+export const getConversation = async (userId: string, conversationId: string) => {
+  try {
+    const conversation = await ConversationModel.findById(conversationId).populate('messages');
+
+    if(!conversation) return false;
+    if(!conversation.participants.includes(new Types.ObjectId(userId))) return false;
+
+    return conversation;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+}
