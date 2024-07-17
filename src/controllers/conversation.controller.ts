@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import log from "../utils/logger";
-import { CreateConversationInput, ConversationsInput } from "../schema/conversation.schema";
-import { createConversation, listConversations } from "../services/conversation.service";
+import { CreateConversationInput, ConversationsInput, CreateMessageInput } from "../schema/conversation.schema";
+import { createConversation, listConversations, sendMessage } from "../services/conversation.service";
 
 export const createConversationHandler = async (req: Request<CreateConversationInput['params']>, res: Response) => {
   try {
@@ -33,6 +33,21 @@ export const listConversationsHandler = async (req: Request<ConversationsInput['
     return res.json({conversations});
   } catch (e) {
     log.error(e);
-    return res.status(400).json({ msg: "cannot list conversations" })
+    return res.status(400).json({ msg: "cannot list conversations" });
+  }
+}
+
+export const sendMessageHandler = async (req: Request<CreateMessageInput['params'], {}, CreateMessageInput['body']>, res: Response) => {
+  try {
+    const userIdFromToken = res.locals.user.sub as string;
+    const { conversationId } = req.params;
+    const { content } = req.body;
+
+    const newMessage = await sendMessage(userIdFromToken, content, conversationId);
+
+    return res.json({ newMessage });
+  } catch (e) {
+    log.error(e);
+    return res.status(400).json({ msg: "cannot send message" });
   }
 }

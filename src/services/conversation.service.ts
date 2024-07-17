@@ -1,4 +1,5 @@
 import ConversationModel from "../models/conversation.model";
+import MessageModel from "../models/message.model";
 import { findUser } from "./user.service";
 import { Types } from "mongoose";
 
@@ -55,6 +56,24 @@ export const listConversations = async (userId: string) => {
     });
 
     return conversations;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+}
+
+export const sendMessage = async (userId: string, content: string, conversationId: string) => {
+  try {
+    const message = await MessageModel.create({
+      author: new Types.ObjectId(userId),
+      content: content,
+      conversation: conversationId
+    });
+
+    await ConversationModel.findByIdAndUpdate(conversationId, {
+      $push: { messages: message._id }
+    });
+
+    return message;
   } catch (e: any) {
     throw new Error(e);
   }
