@@ -1,4 +1,4 @@
-import { TypeOf, object, string, number } from 'zod';
+import { TypeOf, object, string } from 'zod';
 
 export const getMessagesSchema = object({
   params: object({
@@ -7,10 +7,10 @@ export const getMessagesSchema = object({
     }),
   }),
   query: object({
-    page: number({
+    page: string({
       required_error: 'page is required',
     }),
-    limit: number({
+    limit: string({
       required_error: 'limit is required',
     }),
   })

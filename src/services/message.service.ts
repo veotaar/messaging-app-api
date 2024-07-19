@@ -12,8 +12,8 @@ export const getMessages = async (conversationId: string, userId: string, page: 
 
     const messages = await MessageModel.find({ conversation: conversationId })
       .sort('-createdAt')
-      .skip((page - 1) * Number(limit))
-      .limit(Number(limit));
+      .skip((page - 1) * limit)
+      .limit(limit);
 
     return messages;
   } catch (e: any) {
