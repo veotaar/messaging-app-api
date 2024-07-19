@@ -7,6 +7,8 @@ import { createConversationSchema, createMessageSchema, conversationsSchema, get
 import { createUserHandler, loginHandler, listFriendsHandler } from './controllers/user.controller';
 import { createFriendRequestHandler, deleteFriendRequestHandler, listFriendRequestsHandler, acceptFriendRequestHandler, rejectFriendRequestHandler } from './controllers/friendRequest.controller';
 import { createConversationHandler, listConversationsHandler, sendMessageHandler, getConversationHandler } from './controllers/conversation.controller';
+import { getMessagesSchema } from './schema/message.schema';
+import { getMessagesHandler } from './controllers/message.controller';
 
 const routes = (app: Express) => {
   app.get('/protected', requireAuth, (_req, res) => res.json({ msg: 'You are successfully authenticated!' }));
@@ -30,6 +32,7 @@ const routes = (app: Express) => {
 
   app.put('/api/conversations/:conversationId', validate(createMessageSchema), requireAuth, sendMessageHandler);
   app.get('/api/conversations/:conversationId', validate(getConversationSchema), requireAuth, getConversationHandler);
+  app.get('/api/conversations/:conversationId/messages', validate(getMessagesSchema), requireAuth, getMessagesHandler);
 }
 
 export default routes;
