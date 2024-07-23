@@ -11,12 +11,12 @@ import { getMessagesSchema } from './schema/message.schema';
 import { getMessagesHandler } from './controllers/message.controller';
 
 const routes = (app: Express) => {
-  app.get('/protected', requireAuth, (_req, res) => res.json({ msg: 'You are successfully authenticated!' }));
-  app.get('/healthcheck', (req: Request, res: Response) => res.sendStatus(200));
+  app.get('/api/protected', requireAuth, (_req, res) => res.json({ msg: 'You are successfully authenticated!' }));
+  app.get('/api/healthcheck', (req: Request, res: Response) => res.sendStatus(200));
 
   app.post('/api/users', validate(createUserSchema), createUserHandler);
 
-  app.post('/login', validate(loginSchema), loginHandler)
+  app.post('/api/login', validate(loginSchema), loginHandler)
 
   app.post('/api/friend-requests', validate(friendRequestSchema), requireAuth, createFriendRequestHandler);
   app.get('/api/friend-requests', requireAuth, listFriendRequestsHandler)
