@@ -37,8 +37,17 @@ export const friendsSchema = object({
       required_error: 'user ID is required',
     }),
   })
+});
+
+export const searchEmailSchema = object({
+  query: object({
+    email: string({
+      required_error: 'email is required',
+    }).email('Please enter a valid email'),
+  })
 })
 
 export type CreateUserInput = TypeOf<typeof createUserSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type FriendsInput = TypeOf<typeof friendsSchema>;
+export type SearchEmailInput = TypeOf<typeof searchEmailSchema>;

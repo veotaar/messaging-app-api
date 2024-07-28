@@ -1,10 +1,10 @@
 import { Express, Request, Response } from 'express';
 import validate from './middleware/validateSchema';
 import requireAuth from './middleware/requireAuth';
-import { createUserSchema, loginSchema, friendsSchema } from './schema/user.schema';
+import { createUserSchema, loginSchema, friendsSchema, searchEmailSchema } from './schema/user.schema';
 import { friendRequestSchema, deleteFriendRequestSchema } from './schema/friendRequest.schema';
 import { createConversationSchema, createMessageSchema, conversationsSchema, getConversationSchema} from './schema/conversation.schema';
-import { createUserHandler, loginHandler, listFriendsHandler } from './controllers/user.controller';
+import { createUserHandler, loginHandler, listFriendsHandler, findUserWithEmailHandler } from './controllers/user.controller';
 import { createFriendRequestHandler, deleteFriendRequestHandler, listFriendRequestsHandler, acceptFriendRequestHandler, rejectFriendRequestHandler } from './controllers/friendRequest.controller';
 import { createConversationHandler, listConversationsHandler, sendMessageHandler, getConversationHandler } from './controllers/conversation.controller';
 import { getMessagesSchema } from './schema/message.schema';
@@ -26,6 +26,7 @@ const routes = (app: Express) => {
   app.delete('/api/friend-requests/:requestId/reject', validate(deleteFriendRequestSchema), requireAuth, rejectFriendRequestHandler);
 
   app.get('/api/users/:userId/friends', validate(friendsSchema), requireAuth, listFriendsHandler);
+  app.get('/api/users', validate(searchEmailSchema), requireAuth, findUserWithEmailHandler);
 
   app.post('/api/conversations/:initiatorId/:recipientId', validate(createConversationSchema), requireAuth, createConversationHandler);
   app.get('/api/users/:userId/conversations', validate(conversationsSchema), requireAuth, listConversationsHandler);

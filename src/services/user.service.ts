@@ -81,3 +81,15 @@ export const listFriends =  async (userId: string) => {
     throw new Error(e);
   }
 }
+
+export const findUserWithEmail = async (email: string) => {
+  try {
+    const user =  await UserModel.findOne({ email }).select('_id email username');
+
+    if(!user) return false;
+
+    return user;
+  } catch(e: any) {
+    throw new Error(e);
+  }
+}

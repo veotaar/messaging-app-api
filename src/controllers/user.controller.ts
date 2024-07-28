@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import log from "../utils/logger";
-import { createUser, validateUserPassword, listFriends } from "../services/user.service";
-import { CreateUserInput, LoginInput, FriendsInput } from "../schema/user.schema";
+import { createUser, validateUserPassword, listFriends, findUserWithEmail } from "../services/user.service";
+import { CreateUserInput, LoginInput, FriendsInput, SearchEmailInput } from "../schema/user.schema";
 import { issueJwt } from "../utils/jwt.utils";
 
 export const createUserHandler = async (req: Request<{}, {}, CreateUserInput['body']>, res: Response) => {
@@ -48,6 +48,20 @@ export const listFriendsHandler = async (req: Request<FriendsInput['params']>, r
     return res.json({
       friends
     });
+  } catch(e) {
+    log.error(e);
+    return res.sendStatus(400);
+  }
+}
+
+export const findUserWithEmailHandler = async (req: Request<{}, {}, {}, SearchEmailInput['query']>, res: Response) => {
+  try {
+    const emailToSearch = req.query.email;
+    const user = await findUserWithEmail(emailToSearch);
+
+    if(!user) return res.status(404).json({ msg: "user not found" });
+
+    return res.json({ user });
   } catch(e) {
     log.error(e);
     return res.sendStatus(400);
