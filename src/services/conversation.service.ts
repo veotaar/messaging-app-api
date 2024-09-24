@@ -51,9 +51,10 @@ export const listConversations = async (userId: string) => {
     const conversations = await ConversationModel.find({
       $or: [
         { initiator: userId },
-        { participants: userId, messages: { $exists: true, $not: { $size: 0 } } }
+        { participants: userId },
+        // { participants: userId, messages: { $exists: true, $not: { $size: 0 } } }
       ]
-    });
+    }).select('-messages').populate('participants', 'username');
 
     return conversations;
   } catch (e: any) {
@@ -69,9 +70,9 @@ export const sendMessage = async (userId: string, content: string, conversationI
       conversation: conversationId
     });
 
-    await ConversationModel.findByIdAndUpdate(conversationId, {
-      $push: { messages: message._id }
-    });
+    // await ConversationModel.findByIdAndUpdate(conversationId, {
+    //   $push: { messages: message._id }
+    // });
 
     return message;
   } catch (e: any) {

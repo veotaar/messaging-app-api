@@ -10,13 +10,29 @@ export const getMessages = async (conversationId: string, userId: string, page: 
     if(!conversation) return false;
     if(!conversation.participants.includes(new Types.ObjectId(userId))) return false;
 
-    const messages = await MessageModel.find({ conversation: conversationId })
-      .sort('createdAt')
+    const query = { conversation: conversationId };
+
+    const countPromise = MessageModel.countDocuments(query);
+    const messagesPromise = MessageModel.find({ conversation: conversationId })
+      .sort('-createdAt')
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('author', 'username');
 
-    return messages;
+    const [count, messages] = await Promise.all([countPromise, messagesPromise]);
+
+    const pages = Math.ceil(count / limit);
+    const hasNextPage = page < pages;
+    const nextPage = hasNextPage ? page + 1 : null;
+
+    return {
+      currentPage: page,
+      hasNextPage,
+      nextPage,
+      messages: messages.reverse()
+    }
+
+    // return messages;
   } catch (e: any) {
     throw new Error(e);
   }
