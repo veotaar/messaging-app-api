@@ -1,9 +1,9 @@
 import supertest from "supertest";
-import createServer from "../utils/server";
+import useServer from "../utils/server";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from "mongoose";
 
-const app = createServer();
+const { server: app } = useServer();
 
 describe('user', () => {
   beforeAll(async () => {

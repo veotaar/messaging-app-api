@@ -1,8 +1,10 @@
 import express from 'express';
 import routes from '../routes';
 import cors from 'cors';
+import { Server } from "socket.io";
+import { createServer } from 'http';
 
-const createServer = () => {
+const useServer = () => {
   const app = express();
 
   app.use(cors());
@@ -10,7 +12,17 @@ const createServer = () => {
   app.use(express.urlencoded({extended: true}));
   routes(app);
 
-  return app;
+  const server = createServer(app);
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+    }
+  })
+
+  return {
+    server,
+    io
+  }
 }
 
-export default createServer;
+export default useServer;

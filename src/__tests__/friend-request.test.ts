@@ -1,10 +1,10 @@
 import supertest from "supertest";
-import createServer from "../utils/server";
+import useServer from "../utils/server";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from "mongoose";
 import { findUser } from "../services/user.service";
 
-const app = createServer();
+const { server: app } = useServer();
 
 const userOnePayload = {
   "username": "user1",

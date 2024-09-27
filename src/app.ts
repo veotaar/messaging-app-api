@@ -2,13 +2,22 @@ import 'dotenv/config';
 import config from 'config';
 import connect from './utils/connect';
 import log from './utils/logger';
-import createServer from './utils/server';
+import useServer from './utils/server';
 
 const port = config.get<number>('port');
 
-const app = createServer();
+const { server, io } = useServer();
 
-app.listen(port, async () => {
+io.on('connection', (socket) => {
+  log.info('A user is connected!');
+
+  socket.on('join', (userId: string) => {
+    socket.join(userId);
+    log.info(`User ${userId} joined room`);
+  })
+})
+
+server.listen(port, async () => {
   log.info(`App is running at http://localhost:${port}`);
   await connect();
 });
