@@ -14,6 +14,10 @@ io.on('connection', (socket) => {
   socket.on('join', (userId: string) => {
     socket.join(userId);
     log.info(`User ${userId} joined room`);
+  });
+
+  socket.on('disconnect', () => {
+    log.info(`User disconnected`);
   })
 })
 

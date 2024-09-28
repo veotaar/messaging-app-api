@@ -7,9 +7,10 @@ export const getMessagesHandler = async (req: Request<GetMessagesInput['params']
   try {
     const userIdFromToken = res.locals.user.sub as string;
     const { conversationId } = req.params;
-    const { page, limit } = req.query;
+    const { cursor } = req.query;
 
-    const messagesData = await getMessages(conversationId, userIdFromToken, Number(page), Number(limit));
+    // const messagesData = await getMessages(conversationId, userIdFromToken, Number(page), Number(limit));
+    const messagesData = await getMessages(conversationId, userIdFromToken, cursor);
 
     if(!messagesData) return res.status(400).json({ msg: "cannot get messages" });
 

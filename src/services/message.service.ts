@@ -2,33 +2,38 @@ import MessageModel from "../models/message.model";
 import ConversationModel from "../models/conversation.model";
 import { Types } from "mongoose";
 
-export const getMessages = async (conversationId: string, userId: string, page: number, limit: number) => {
+export const getMessages = async (conversationId: string, userId: string, cursor?: string) => {
   try {
+    const limit = 20
 
     const conversation = await ConversationModel.findById(conversationId);
 
     if(!conversation) return false;
     if(!conversation.participants.includes(new Types.ObjectId(userId))) return false;
 
-    const query = { conversation: conversationId };
+    type MessageQuery = {
+      conversation: string;
+      _id?: {
+        $lt: string;
+      };
+    }
 
-    const countPromise = MessageModel.countDocuments(query);
-    const messagesPromise = MessageModel.find({ conversation: conversationId })
+    const query: MessageQuery = { conversation: conversationId };
+
+    if(cursor) {
+      query['_id'] = { $lt: cursor }
+    }
+
+    const messages = await MessageModel.find(query)
+      .lean()
       .sort('-createdAt')
-      .skip((page - 1) * limit)
       .limit(limit)
       .populate('author', 'username');
 
-    const [count, messages] = await Promise.all([countPromise, messagesPromise]);
-
-    const pages = Math.ceil(count / limit);
-    const hasNextPage = page < pages;
-    const nextPage = hasNextPage ? page + 1 : null;
+    const newCursor = messages.length > 1 ? messages[messages.length - 1]._id.toString() : null;
 
     return {
-      currentPage: page,
-      hasNextPage,
-      nextPage,
+      cursor: newCursor,
       messages: messages.reverse()
     }
 
