@@ -7,10 +7,10 @@ export const getMessagesSchema = object({
     }),
   }),
   query: object({
-    // page: string({
-    //   required_error: 'page is required',
-    // }),
-    cursor: string().optional()
+    page: string({
+      required_error: 'page is required',
+    }),
+    // cursor: string().optional()
     // limit: string({
     //   required_error: 'limit is required',
     // }),
