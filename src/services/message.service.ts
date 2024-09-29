@@ -25,7 +25,7 @@ export const getMessages = async (conversationId: string, userId: string, page: 
     let pageToGet = page === -1 ? pages : page;
 
     const messages = await MessageModel.find({ conversation: conversationId })
-      .sort('-createdAt')
+      .sort('createdAt')
       .skip((pageToGet - 1) * limit)
       .limit(limit)
       .populate('author', 'username');
@@ -41,7 +41,7 @@ export const getMessages = async (conversationId: string, userId: string, page: 
       nextPage,
       hasPreviousPage,
       previousPage,
-      messages: messages.reverse()
+      messages: messages
     }
 
     // return messages;
