@@ -11,10 +11,14 @@ const { server, io } = useServer();
 io.on('connection', (socket) => {
   log.info('A user is connected!');
 
-  socket.on('join', (userId: string) => {
-    socket.join(userId);
-    log.info(`User ${userId} joined room`);
+  socket.on('joinChat', (chatId: string) => {
+    socket.join(chatId);
+    log.info("user joined chat" + chatId);
   });
+
+  socket.on('sendMessage', (newMessage) => {
+    io.in(newMessage.newMessage.conversation).emit("newMessage", newMessage);
+  })
 
   socket.on('disconnect', () => {
     log.info(`User disconnected`);
