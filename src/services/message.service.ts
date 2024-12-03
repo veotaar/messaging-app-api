@@ -20,6 +20,17 @@ export const getMessages = async (conversationId: string, userId: string, page: 
     const count = await MessageModel.countDocuments(query);
     const pages = Math.ceil(count / limit); // last page
 
+    if(count === 0) {
+      return {
+        currentPage: 1,
+        hasNextPage: false,
+        nextPage: null,
+        hasPreviousPage: false,
+        previousPage: null,
+        messages: []
+      }
+    }
+
     if(page > pages) return false;
 
     let pageToGet = page === -1 ? pages : page;
