@@ -6,7 +6,8 @@ import log from './logger';
 const writeConcern = new mongoose.mongo.WriteConcern('majority');
 
 const connect = async () => {
-  const dbString = config.get<string>('dbString');
+  const dbString = config.get<string>('dbAtlas');
+  console.log(dbString)
 
   try {
     await mongoose.connect(dbString, {

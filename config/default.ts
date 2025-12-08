@@ -3,4 +3,7 @@ export default {
   dbString: '',
   privateKey: '',
   publicKey: '',
+  defaultFriendEmail: '',
+  defaultFriendUsername: '',
+  welcomeMessage: '',
 };

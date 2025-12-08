@@ -1,25 +1,16 @@
 import UserModel from "../models/user.model";
 import { hashPassword, verifyPassword } from "../utils/password.utils";
 import mongoose from "mongoose";
+import config from 'config';
+import { createConversation, sendMessage } from "./conversation.service";
+
+const defaultFriendEmail = config.get<string>('defaultFriendEmail');
+const defaultWelcomeMessage = config.get<string>('welcomeMessage');
 
 interface CreateUserInput {
   email: string;
   username: string;
   password: string;
-}
-
-export const createUser = async (input: CreateUserInput) => {
-  try {
-    const hashedPassword = await hashPassword(input.password);
-
-    const user = await UserModel.create({
-      ...input,
-      password: hashedPassword
-    });
-    return user;
-  } catch(e: any) {
-    throw new Error(e);
-  }
 }
 
 export const validateUserPassword = async ({
@@ -69,6 +60,33 @@ export const addFriend = async (userId: string, friendId: string) => {
     throw new Error(e);
   }
 }
+
+export const createUser = async (input: CreateUserInput) => {
+  try {
+    const hashedPassword = await hashPassword(input.password);
+
+    const user = await UserModel.create({
+      ...input,
+      password: hashedPassword
+    });
+
+    const defaultFriend = await UserModel.findOne({ email: defaultFriendEmail });
+
+    if (defaultFriend) {
+      await addFriend(user._id.toString(), defaultFriend._id.toString());
+      await addFriend(defaultFriend._id.toString(), user._id.toString());
+      const conv = await createConversation(defaultFriend._id.toString(), user._id.toString() );
+      if (conv) {
+        await sendMessage(defaultFriend._id.toString(), defaultWelcomeMessage, conv._id.toString());
+      }
+    }
+
+    return user;
+  } catch(e: any) {
+    throw new Error(e);
+  }
+}
+
 
 export const listFriends =  async (userId: string) => {
   try {
