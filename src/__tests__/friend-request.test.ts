@@ -3,8 +3,10 @@ import useServer from "../utils/server";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from "mongoose";
 import { findUser } from "../services/user.service";
+import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 
 const { server: app } = useServer();
+let mongoServer: MongoMemoryServer;
 
 const userOnePayload = {
   "username": "user1",
@@ -22,7 +24,7 @@ const userTwoPayload = {
 
 describe('friend requests', () => {
   beforeAll(async () => {
-    const mongoServer = await MongoMemoryServer.create();
+    mongoServer = await MongoMemoryServer.create();
     const dbUri = mongoServer.getUri();
 
     await mongoose.connect(dbUri);
@@ -47,7 +49,7 @@ describe('friend requests', () => {
 
       const userOne = await findUser(userOneId);
 
-      console.log(userOne);
+      // console.log(userOne);
 
       expect(statusCode).toBe(200);
       expect(friendReqStatusCode).toBe(200);
@@ -58,5 +60,6 @@ describe('friend requests', () => {
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoose.connection.close();
+    await mongoServer.stop();
   });
 });

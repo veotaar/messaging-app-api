@@ -2,12 +2,14 @@ import supertest from "supertest";
 import useServer from "../utils/server";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from "mongoose";
+import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 
 const { server: app } = useServer();
+let mongoServer: MongoMemoryServer;
 
 describe('user', () => {
   beforeAll(async () => {
-    const mongoServer = await MongoMemoryServer.create();
+    mongoServer = await MongoMemoryServer.create();
     const dbUri = mongoServer.getUri();
 
     await mongoose.connect(dbUri);
@@ -49,7 +51,7 @@ describe('user', () => {
     });
 
     it('should fail when trying to login with nonexisting account', async () => {
-      const { statusCode } = await supertest(app).post('/login').send({
+      const { statusCode } = await supertest(app).post('/api/login').send({
         "email": "testuser2@example.com",
         "password": "123456789"
       });
@@ -58,7 +60,7 @@ describe('user', () => {
     });
 
     it('should login', async () => {
-      const { statusCode } = await supertest(app).post('/login').send({
+      const { statusCode } = await supertest(app).post('/api/login').send({
         "email": "testuser1@example.com",
         "password": "123456789"
       });
@@ -70,5 +72,6 @@ describe('user', () => {
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoose.connection.close();
+    await mongoServer.stop();
   });
 });
