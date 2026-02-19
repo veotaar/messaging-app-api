@@ -1,0 +1,11 @@
+node_modules
+.git
+.gitignore
+dist
+coverage
+*.log
+.env
+.env.*
+Dockerfile*
+**/*.test.ts
+src/__tests__
