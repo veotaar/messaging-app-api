@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import config from 'config';
+import { ENV } from '../../env';
 
 const publicKey = Buffer.from(
-  config.get<string>('publicKey'),
+  ENV.PUBLIC_KEY,
   'base64'
 ).toString('ascii');
 

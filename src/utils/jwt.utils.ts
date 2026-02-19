@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken';
-import config from 'config';
 import { User } from '../models/user.model';
 import { HydratedDocument } from 'mongoose';
+import { ENV } from '../../env';
 
 const privateKey = Buffer.from(
-  config.get<string>('privateKey'),
+  ENV.PRIVATE_KEY,
   'base64'
 ).toString('ascii');
 
 const publicKey = Buffer.from(
-  config.get<string>('publicKey'),
+  ENV.PUBLIC_KEY,
   'base64'
 ).toString('ascii');
 

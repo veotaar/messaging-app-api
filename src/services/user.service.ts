@@ -1,11 +1,10 @@
 import UserModel from "../models/user.model";
-import { hashPassword, verifyPassword } from "../utils/password.utils";
 import mongoose from "mongoose";
-import config from 'config';
 import { createConversation, sendMessage } from "./conversation.service";
+import { ENV } from '../../env';
 
-const defaultFriendEmail = config.get<string>('defaultFriendEmail');
-const defaultWelcomeMessage = config.get<string>('welcomeMessage');
+const defaultFriendEmail = ENV.DEFAULT_FRIEND_EMAIL;
+const defaultWelcomeMessage = ENV.WELCOME_MESSAGE;
 
 interface CreateUserInput {
   email: string;
@@ -25,7 +24,7 @@ export const validateUserPassword = async ({
 
     if (!user) return false;
 
-    const isValid = await verifyPassword(user.password, password);
+    const isValid = await Bun.password.verify(password, user.password);
 
     if (!isValid) return false;
 
@@ -63,7 +62,7 @@ export const addFriend = async (userId: string, friendId: string) => {
 
 export const createUser = async (input: CreateUserInput) => {
   try {
-    const hashedPassword = await hashPassword(input.password);
+    const hashedPassword = await Bun.password.hash(input.password);
 
     const user = await UserModel.create({
       ...input,

@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
-import config from 'config';
+import { ENV } from '../../env';
 import log from './logger';
 
 
 const writeConcern = new mongoose.mongo.WriteConcern('majority');
 
 const connect = async () => {
-  const dbString = config.get<string>('dbAtlas');
-  console.log(dbString)
+  const dbString = ENV.DB_ATLAS;
 
   try {
     await mongoose.connect(dbString, {

@@ -1,10 +1,9 @@
-import 'dotenv/config';
-import config from 'config';
+import { ENV } from '../env';
 import connect from './utils/connect';
 import log from './utils/logger';
 import useServer from './utils/server';
 
-const port = config.get<number>('port');
+const port = ENV.PORT;
 
 const { server, io } = useServer();
 
